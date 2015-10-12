@@ -1,0 +1,34 @@
+package MemoryUtil;
+
+import java.io.File;
+
+import android.content.Context;
+import android.os.Environment;
+import android.os.StatFs;
+import android.text.format.Formatter;
+import android.util.Log;
+
+public class Memory {
+	
+	
+	
+	
+	
+  public static void getTotalMem(Context context)
+  {
+	String state=Environment.getExternalStorageState();
+	int SDcard=0;
+	if(Environment.MEDIA_MOUNTED.equals(state))
+	{
+		File sdf=Environment.getExternalStorageDirectory();
+		StatFs sfs_sd=new StatFs(sdf.getPath());
+		SDcard=sfs_sd.getBlockCount()*sfs_sd.getBlockSize();
+	}
+    File f=Environment.getRootDirectory();
+    StatFs sf=new StatFs(f.getPath());
+    String result;
+    result=Formatter.formatFileSize(context, sf.getBlockCount()*sf.getBlockSize()+SDcard);
+       Log.d("on memory", result);
+  }
+	
+}

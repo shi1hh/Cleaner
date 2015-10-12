@@ -1,0 +1,101 @@
+package com.example.cleaner;
+
+import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import MemoryUtil.Memory;
+import android.support.v7.app.ActionBarActivity;
+import android.text.format.Formatter;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.StatFs;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
+
+
+public class MainActivity extends ActionBarActivity {
+	 int i=10;
+	 Myprogress view;
+	 static int times=0;//percent
+	public Handler myhand=new Handler(){
+		
+		public void handleMessage(Message ms)
+		{
+			if(ms.what==0)
+			{
+				goViewMain();
+			}
+			if(ms.what==1)
+			{
+				 view.setProgress(times);
+			}
+		}
+	};
+	
+	
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	WelcomeView wv=new WelcomeView(this);
+		this.setContentView(wv);
+		
+    }
+
+public void goViewMain()
+{
+	setContentView(R.layout.activity_main);
+	if(view==null)
+	{
+	 view=(Myprogress) findViewById(R.id.custom_progress);
+	}
+	view.availa_mom=Memory.getAvailableiMom(this);
+	Memory.getMom(this);
+    final int percent=Memory.getPercentMom(this);
+    final Timer t=new Timer();
+	final TimerTask tt=new TimerTask(){
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			if(times<percent)
+			{
+			myhand.sendEmptyMessage(1);
+			times+=1;
+			}
+			else
+			{
+				t.cancel();
+				times=0;
+			}
+		}};
+    t.schedule(tt, 100,100);
+}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

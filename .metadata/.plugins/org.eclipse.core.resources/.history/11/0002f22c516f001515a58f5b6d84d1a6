@@ -1,0 +1,74 @@
+package MemoryUtil;
+
+import java.io.File;
+
+import android.content.Context;
+import android.os.Environment;
+import android.os.StatFs;
+import android.text.format.Formatter;
+import android.util.Log;
+
+public class Memory {
+	
+	
+	
+	
+	
+  public static void getTotalMem(Context context)
+  {
+	String state=Environment.getExternalStorageState();
+	int SDcard=0;
+	if(Environment.MEDIA_MOUNTED.equals(state))
+	{
+		File sdf=Environment.getExternalStorageDirectory();
+		StatFs sfs_sd=new StatFs(sdf.getPath());
+		SDcard=sfs_sd.getBlockCount()*sfs_sd.getBlockSize();
+	}
+    File f=Environment.getRootDirectory();
+    StatFs sf=new StatFs(f.getPath());
+    String result;
+    result=Formatter.formatFileSize(context, sf.getBlockCount()*sf.getBlockSize()+SDcard);
+       Log.d("on memory", result);
+  }
+  public static void getAvailableiMom(Context context)
+  {
+		String state=Environment.getExternalStorageState();
+		int SDcard=0;
+		if(Environment.MEDIA_MOUNTED.equals(state))
+		{
+			File sdf=Environment.getExternalStorageDirectory();
+			StatFs sfs_sd=new StatFs(sdf.getPath());
+			SDcard=sfs_sd.getAvailableBlocks()*sfs_sd.getBlockSize();
+		}
+		  File f=Environment.getRootDirectory();
+		    StatFs sf=new StatFs(f.getPath());
+		    String result;
+		   result=Formatter.formatFileSize(context, sf.getAvailableBlocks()*sf.getBlockSize()+SDcard);
+		  Log.d("on availablememory", result);
+  }
+  public static void getPercentMom(Context context)
+  {
+	  String result;
+		String state=Environment.getExternalStorageState();
+		int SDcard_total=0;
+		int SDcard_availa=0;
+		int root_total=0;
+		int root_availa=0;
+		if(Environment.MEDIA_MOUNTED.equals(state))
+		{
+			File sdf=Environment.getExternalStorageDirectory();
+			StatFs sfs_sd=new StatFs(sdf.getPath());
+			SDcard_availa=sfs_sd.getAvailableBlocks()*sfs_sd.getBlockSize();
+			SDcard_total=sfs_sd.getBlockCount()*sfs_sd.getBlockSize();
+		}
+		  File f=Environment.getRootDirectory();
+		    StatFs sf=new StatFs(f.getPath());
+		    root_total=sf.getBlockCount()*sf.getBlockSize();
+		    root_availa=sf.getAvailableBlocks()*sf.getBlockSize();
+	
+		    double z=(root_availa+SDcard_availa)/(root_total+SDcard_total)*100;
+		  /* z=Math.rint(z);*/
+		  Log.d("percent", "  "+z);
+  }
+	
+}

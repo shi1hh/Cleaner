@@ -1,0 +1,26 @@
+package MemoryUtil;
+
+import java.io.File;
+
+import android.content.Context;
+import android.os.Environment;
+import android.os.StatFs;
+import android.text.format.Formatter;
+import android.util.Log;
+
+public class Memory {
+	
+	
+	
+	
+	
+  public static void getTotalMem(Context context)
+  {
+    File f=Environment.getRootDirectory();
+    StatFs sf=new StatFs(f.getPath());
+    String result;
+    result=Formatter.formatFileSize(context, sf.getBlockCount()*sf.getBlockSize());
+       Log.d("on memory", result);
+  }
+	
+}
